@@ -8,7 +8,7 @@ namespace DiscordBot.Util
 {
     public static class Extensions
     {
-        internal static bool HasIndex(this Array array, int index)
+        internal static bool HasIndex(this Array array, int index)  
         {
             return array.Length > index;
         }
