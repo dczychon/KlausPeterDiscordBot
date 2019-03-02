@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "KlausPeterBot": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "KP_BOTCONFIG": "S:\\klauspeterbot.dev.json"
+      }
+    }
+  }
+}

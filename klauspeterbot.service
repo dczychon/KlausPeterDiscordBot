@@ -1,0 +1,15 @@
+[Unit]
+Description=Klaus Peter Discord Bot
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/dotnet /usr/share/klauspeterbot/KlausPeterBot.dll
+SyslogIdentifier=klauspeterbot
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=5
+TimeoutStopSec=10
+User=botuser
+
+[Install]
+WantedBy=multi-user.target
