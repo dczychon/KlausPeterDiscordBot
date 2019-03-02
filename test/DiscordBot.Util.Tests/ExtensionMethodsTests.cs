@@ -48,7 +48,6 @@ namespace DiscordBot.Util.Tests
                 channelMock.SetupGet(c => c.Name).Returns($"somechannel");
             }
             
-
             Mock<IUser> userMock = new Mock<IUser>();
             userMock.SetupGet(u => u.Username).Returns(username);
             userMock.SetupGet(u => u.Discriminator).Returns(userDiscriminator);
