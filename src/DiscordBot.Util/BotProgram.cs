@@ -95,6 +95,7 @@ namespace DiscordBot.Util
             }
             _logger.Info("Added {0} command(s) to container", container.Count());
             serviceCollection.AddSingleton(container);
+            serviceProvider = serviceCollection.BuildServiceProvider(); //Build ServiceProvider agein with ICommandContainer
 
             //Configure global filter
             IEnumerable<CommandFilter> globalFilter = ConfigureGlobalFilter().ToList();
