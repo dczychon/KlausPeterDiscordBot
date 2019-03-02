@@ -1,5 +1,7 @@
 name: $(Year:yyyy).$(Month).$(DayOfMonth).$(Rev:r)
 
+trigger: none
+
 pr:
   paths:
     include:
