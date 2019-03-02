@@ -7,9 +7,6 @@ pr:
       - test/*
       
 trigger:
-  branches:
-    include:
-    - master
   paths:
     include:
       - src/*
