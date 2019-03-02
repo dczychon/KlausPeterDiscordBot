@@ -5,6 +5,15 @@ pr:
     include:
       - src/*
       - test/*
+      
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+      - src/*
+      - test/*
 
 pool:
   vmImage: 'ubuntu-16.04'
