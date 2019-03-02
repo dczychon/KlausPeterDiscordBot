@@ -1,15 +1,22 @@
+name: $(Year:yyyy).$(Month).$(DayOfMonth).$(Rev:r)
+
+pr:
+  paths:
+    include:
+      - src/*
+      - test/*
+
 pool:
-  vmImage: Hosted Ubuntu 1604
+  vmImage: 'ubuntu-16.04'
   
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+variables:
+  BuildConfiguration: 'Release'
 
 steps:
 - task: PowerShell@2
   displayName: 'Set version'
   inputs:
-    targetType: ./
-    filePath: scripts/build/SetAssemblyVersionOnBuildServer.ps1
+    filePath: 'scripts/build/SetAssemblyVersionOnBuildServer.ps1'
 
 - task: DotNetCoreCLI@2
   displayName: Restore packages
@@ -33,7 +40,6 @@ steps:
 - task: PowerShell@2
   displayName: 'Create bot package'
   inputs:
-    targetType: ./
     filePath: 'Create-BotPackage.ps1'
     arguments: '-OutputPath $(build.artifactstagingdirectory)/KlausPeterBot-package -Configuration $(BuildConfiguration)'
 
@@ -42,4 +48,3 @@ steps:
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)/KlausPeterBot-package'
     ArtifactName: KlausPeterBot-package
-
