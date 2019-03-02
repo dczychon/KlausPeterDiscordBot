@@ -6,8 +6,6 @@ pr:
       - src/*
       - test/*
 
-trigger: none
-
 pool:
   vmImage: 'ubuntu-16.04'
   
