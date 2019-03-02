@@ -1,17 +1,5 @@
 name: $(Year:yyyy).$(Month).$(DayOfMonth).$(Rev:r)
 
-pr:
-  paths:
-    include:
-      - src/*
-      - test/*
-      
-trigger:
-  paths:
-    include:
-      - src/*
-      - test/*
-
 pool:
   vmImage: 'ubuntu-16.04'
   
