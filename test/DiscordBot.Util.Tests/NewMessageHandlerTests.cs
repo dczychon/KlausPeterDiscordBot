@@ -22,10 +22,29 @@ namespace DiscordBot.Util.Tests
         [InlineData("This is a normal message", null)]  //On a normal message the bot should not respond
         public async Task MessageTriggersExpectedOutput(string inputMessage, string expectedResponse)
         {
-            Mock<IMessage> socketMessageMock = GetSocketMessageMockWithSpecifiedMessageCallback(inputMessage, m => Assert.Equal(expectedResponse, m));
-            
+            string response = null;
+
+            Mock<IMessage> socketMessageMock = new Mock<IMessage>();
+            socketMessageMock
+                .SetupGet(m => m.Content)
+                .Returns(inputMessage);
+            socketMessageMock
+                .SetupGet(m => m.Source)
+                .Returns(MessageSource.User);
+            Mock<IMessageChannel> messageChannelMock = new Mock<IMessageChannel>();
+            messageChannelMock
+                .Setup(c => c.SendMessageAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Embed>(), It.IsAny<RequestOptions>()))
+                .Callback<string, bool, Embed, RequestOptions>((msg, tts, embed, reqOptions) => response = msg)
+                .Returns(() => Task.FromResult<IUserMessage>(default(SocketUserMessage)));
+            socketMessageMock
+                .Setup(x => x.Channel)
+                .Returns(messageChannelMock.Object);
+
             NewMessageHandler messageHandler = new NewMessageHandler(new ServiceCollection().BuildServiceProvider(), GetPingCommandContainer(), Array.Empty<CommandFilter>());
             await messageHandler.HandleMessage(socketMessageMock.Object);
+
+            messageChannelMock.Verify(c => c.SendMessageAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Embed>(), It.IsAny<RequestOptions>()), expectedResponse == null ? Times.Never() : Times.Once());
+            Assert.Equal(expectedResponse, response);
         }
 
         private static ICommandContainer GetPingCommandContainer()
@@ -33,26 +52,6 @@ namespace DiscordBot.Util.Tests
             CommandContainer container = new CommandContainer();
             container.AddCommandHandler<PingCommand>();
             return container;
-        }
-
-        private static Mock<IMessage> GetSocketMessageMockWithSpecifiedMessageCallback(string message, Action<string> sendMessageValidation)
-        {
-            Mock<IMessage> socketMessageMock = new Mock<IMessage>();
-            Mock<ISocketMessageChannel> messageChannelMock = new Mock<ISocketMessageChannel>();
-
-            messageChannelMock
-                .Setup(c => c.SendMessageAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Embed>(), It.IsAny<RequestOptions>()))
-                .Callback<string, bool, Embed, RequestOptions>((msg, tts, embed, reqOptions) => sendMessageValidation(msg));
-
-            socketMessageMock
-                .Setup(m => m.ToString())
-                .Returns(message);
-
-            socketMessageMock
-                .Setup(x => x.Channel)
-                .Returns(messageChannelMock.Object);
-
-            return socketMessageMock;
         }
     }
 }

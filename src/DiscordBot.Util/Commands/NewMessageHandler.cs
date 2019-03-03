@@ -42,7 +42,7 @@ namespace DiscordBot.Util.Commands
             {
                 if (message.Content.StartsWith("!") && message.Content.Length > 1)
                 {
-                    _logger.Info("Processing message {0} from \"{1}\" in \"{2}\": \"{3}\"", message.Id, message.Author.Username, message.Channel.Name, message.Content);
+                    _logger.Info("Processing message {0} from \"{1}\" in \"{2}\": \"{3}\"", message.Id, message.Author?.Username, message.Channel.Name, message.Content);
 
                     string[] msg = message.Content.Substring(1).Split(' ');
 
@@ -63,7 +63,7 @@ namespace DiscordBot.Util.Commands
                                 return;
                             }
 
-                            _logger.Debug("Message {0} from {1} is handled by {2}", message.Id, message.Author.Username, iCommandType.FullName);
+                            _logger.Debug("Message {0} from {1} is handled by {2}", message.Id, message.Author?.Username, iCommandType.FullName);
                             try
                             {
                                 await command.Execute(message);
@@ -78,7 +78,7 @@ namespace DiscordBot.Util.Commands
                         {
                             if (denyScope != FilterScope.Global)
                             {
-                                _logger.Info("Execution of command \"{0}\" from {1} in channel {2} is not allowed", message.Content, message.Author.Username, message.Channel.Name);
+                                _logger.Info("Execution of command \"{0}\" from {1} in channel {2} is not allowed", message.Content, message.Author?.Username, message.Channel?.Name);
                                 await message.Channel.SendMessageAsync("What you are planning to do is not allowed here! :astonished::point_up:");
                             }
                         }
