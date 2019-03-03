@@ -21,13 +21,19 @@ namespace DiscordBot.Util.Tests
         }
 
         [Theory]
-        [InlineData(typeof(PingCommand), "Syntax: **!ping**")]
-        [InlineData(typeof(HelpCommand), "Syntax: **!help** (Command name)")]
-        [InlineData(typeof(InspectDscCommand), "Syntax: **!inspect-dsc** [Path]")]
-        public void RenderArgumentsHelp(Type inputType, string expectedArgumentsHelp)
+        [InlineData(typeof(PingCommand), "**!ping** \t- Execute this to get a super special response")]
+        [InlineData(typeof(HelpCommand), "**!help** \t- Prints usage for a command")]
+        [InlineData(typeof(InspectDscCommand), "**!inspect-dsc** \t- Allows the inspection of the DiscordSocketClient at runtime")]
+        public void RenderHeaderHelpTest(Type inputType, string expectedHeader)
         {
             HelpTextRenderer helpTextRenderer = new HelpTextRenderer(inputType);
-            Assert.Equal(expectedArgumentsHelp, helpTextRenderer.GenerateArgumentsHelp().ToString());
+            Assert.Equal(expectedHeader, helpTextRenderer.GenerateHeaderHelp().ToString());
+        }
+
+        [Fact]
+        public void DontRenderHelpForTypesWithoutCommandVerbAttribute()
+        {
+            Assert.Throws<ArgumentException>(()=> new HelpTextRenderer(typeof(String)).GetHelp());
         }
     }
 }
